@@ -39,6 +39,7 @@ public class HDF5LazySaver extends HDF5LazyLoader implements ILazyAsyncSaver, Se
 	private Object fill;
 	private boolean create = false; // create on first slice setting
 	private boolean init = false;   // has been initialized?
+	private boolean cacheIDs;
 
 	private ILazyWriteableDataset writeableDataset;
 
@@ -147,6 +148,7 @@ public class HDF5LazySaver extends HDF5LazyLoader implements ILazyAsyncSaver, Se
 				create = true;
 			} else {
 				HDF5File fid = HDF5FileFactory.acquireFile(filePath, true);
+				fid.setDatasetIDsCaching(cacheIDs);
 				try {
 					HDF5Utils.writeDatasetSlice(fid, dataPath, slice, data);
 				} catch (NexusException e) {
@@ -186,6 +188,7 @@ public class HDF5LazySaver extends HDF5LazyLoader implements ILazyAsyncSaver, Se
 	public void setSliceAsync(IMonitor mon, IDataset data, SliceND slice) throws IOException {
 		try {
 			HDF5File fid = HDF5FileFactory.acquireFile(filePath, true);
+			fid.setDatasetIDsCaching(cacheIDs);
 			synchronized (fid) {
 				fid.addWriteJob(writeableDataset, data, slice);
 				fid.decrementCount();
@@ -218,6 +221,10 @@ public class HDF5LazySaver extends HDF5LazyLoader implements ILazyAsyncSaver, Se
 		return trueShape.clone();
 	}
 
+	public void setCacheIDs(boolean cacheIDs) {
+		this.cacheIDs = cacheIDs;
+	}
+	
 	@Override
 	public String toString() {
 		return dataPath;

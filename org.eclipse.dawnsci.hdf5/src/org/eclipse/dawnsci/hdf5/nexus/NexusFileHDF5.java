@@ -189,6 +189,7 @@ public class NexusFileHDF5 implements NexusFile {
 
 	private boolean useSWMR = false;
 	private boolean writeAsync;
+	private boolean cacheIDs;
 	
 	private static int DEF_FIXED_STRING_LENGTH = 1024;
 
@@ -976,8 +977,10 @@ public class NexusFileHDF5 implements NexusFile {
 		if (writeAsync) {
 			saver.setAsyncWriteableDataset(data);
 		}
+		saver.setCacheIDs(cacheIDs);
 		data.setWritingAsync(writeAsync);
 		data.setSaver(saver);
+
 
 		DataNode dataNode = TreeFactory.createDataNode(dataPath.hashCode());
 		((GroupNode)parentNode.node).addDataNode(name, dataNode);
@@ -1621,6 +1624,7 @@ public class NexusFileHDF5 implements NexusFile {
 	}
 
 	public void setCacheDataset(boolean cacheDataset) {
+		this.cacheIDs = cacheDataset;
 		file.setDatasetIDsCaching(cacheDataset);
 	}
 

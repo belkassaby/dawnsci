@@ -72,8 +72,8 @@ public interface NexusFileBuilder {
 	 * The nexus file is left open and SWMR mode activated.
 	 * This file must be closed by calling {@link #closeFile()}
 	 * (or by using try-with-resources on this object).
-	 * @param async if true, then all writes are done asynchronously
+	 * @param if cache is true, then all datasets are held open
 	 * @throws NexusException if the nexus file could not be saved for any reason 
 	 */
-	public NexusScanFile createFile(boolean async) throws NexusException;
+	public NexusScanFile createFile(boolean cache) throws NexusException;
 }
